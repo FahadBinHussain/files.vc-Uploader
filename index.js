@@ -8,8 +8,9 @@ const { program } = require('commander');
 const chalk = require('chalk');
 require('dotenv').config();
 
-// Get API key from environment variable
+// Get API key and account ID from environment variables
 const API_KEY = process.env.FILES_VC_API_KEY;
+const ACCOUNT_ID = process.env.FILES_VC_ACCOUNT_ID;
 
 // Configure the command-line interface
 program
@@ -17,7 +18,7 @@ program
   .description('A simple command-line tool to upload files to files.vc')
   .version('1.0.0')
   .argument('<filepath>', 'Path to the file you want to upload')
-  .option('-a, --account-id <id>', 'Optional account ID to associate with the upload')
+  .option('-a, --account-id <id>', 'Optional account ID to associate with the upload (overrides environment variable)')
   .parse(process.argv);
 
 const options = program.opts();
@@ -53,6 +54,7 @@ async function uploadFile(filePath, accountId) {
     // Add account ID if provided
     if (accountId) {
       headers['X-Account-ID'] = accountId;
+      console.log(chalk.blue(`Using account ID: ${accountId} (files will never expire)`));
     }
     
     const response = await axios.post('https://api.files.vc/upload', form, { headers });
@@ -94,7 +96,9 @@ async function uploadFile(filePath, accountId) {
       process.exit(1);
     }
     
-    await uploadFile(filePath, options.accountId);
+    // Use command line account ID if provided, otherwise use the one from environment
+    const accountId = options.accountId || ACCOUNT_ID;
+    await uploadFile(filePath, accountId);
   } catch (error) {
     console.error(chalk.red('An unexpected error occurred:'), error.message);
     process.exit(1);
