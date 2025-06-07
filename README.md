@@ -1,5 +1,9 @@
 # Files.vc Uploader
 
+<img src="https://wakapi-qt1b.onrender.com/api/badge/fahad/interval:any/project:files.vc-Uploader" 
+     alt="Wakapi Time Tracking" 
+     title="Spent more than that amount of time spent on this project">
+
 A simple command-line tool and Node.js module to upload files to [files.vc](https://files.vc/).
 
 ## Features
